@@ -16,6 +16,8 @@ jobs:
         run_id: ${{ github.run_id }}
         name: ${{ env.name || github.workflow }}
         documentation: ".github/workflows/github-check.md"
+        enforce: true
+        enforce_admin: true
         
   main:
     needs: [register]
@@ -26,6 +28,6 @@ jobs:
 
     # Analyze Azure resources using PSRule for Azure
     - name: Analyze Azure template files
-      uses: microsoft/ps-rule@v2.1.0
+      uses: microsoft/ps-rule@v2.2.0
       with:
         modules: 'PSRule.Rules.GitHub'
