@@ -16,8 +16,8 @@ jobs:
         run_id: ${{ github.run_id }}
         name: ${{ env.name || github.workflow }}
         documentation: ".github/workflows/github-check.md"
-        enforce: true
-        enforce_admin: true
+        enforce: false
+        enforce_admin: false
         
   main:
     needs: [register]
