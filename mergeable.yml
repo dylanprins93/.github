@@ -1,31 +1,19 @@
 version: 2
 mergeable:
   - when: pull_request.*, pull_request_review.*
-    name: 'Checking required files'
-    filter:
-      - do: repository
-        visibility: 'public'
+    name: 'Checking labels'
     validate:
-    - do: and
-      validate:
-        - do: contents
-          files: # determine which files contents to validate
-            pr_diff: false # If true, validator will grab all the added and modified files in the head of the PR
-          must_include:
-             regex: 'LICENSE'
-             message: 'must include a License file'
-        - do: contents
-          files: # determine which files contents to validate
-            pr_diff: false # If true, validator will grab all the added and modified files in the head of the PR
-          must_include:
-             regex: 'CONTRIBUTING.md'
-             message: 'must include a contributing file'
+      - do: label
+        must_include:
+          regex: 'patch|minor|major|no-release'
+          regex_flag: 'none' # Optional. Specify the flag for Regex. default is 'i', to disable default use 'none'
+          message: 'Must have a version increment label'
     fail:
       - do: checks # default pass case
         status: 'failure' # Can be: success, failure, neutral, cancelled, timed_out, or action_required
         payload:
-          title: 'Must have the required files'
-          summary: "Must have a required files"
+          title: 'Must have a version increment or no-release label'
+          summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
 
   - when: pull_request.opened
     name: "Greet a contributor"
