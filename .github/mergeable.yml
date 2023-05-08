@@ -34,13 +34,10 @@ mergeable:
       must_exclude:
         regex: 'master'
         message: 'Merging into repo:master is forbidden'
-  pass:
-    - do: checks 
-      status: 'success' 
-      payload:
-        title: 'Mergeable Run have been Completed!'
-        summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
-
+    - do: description
+      no_empty:
+        enabled: true
+  
 - when: pull_request.*, pull_request_review.*
   filter:
     - do: repository
