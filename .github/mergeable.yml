@@ -10,7 +10,7 @@ mergeable:
     - do: repository
       visibility: 'private'
       name:
-        must_include:
+        must_exclude:
           regex: '/^(?!InSpark\.|Solution\.|BRC\.|DNA\.|DEV\.|SEC\.).*/'
           regex_flag: 'none'
   validate:
