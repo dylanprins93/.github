@@ -10,8 +10,8 @@ mergeable:
     - do: repository
       visibility: 'private'
       name:
-        must_exclude:
-          regex: '/^(InSpark|Solution|BRC|DNA|DEV|SEC)\..*'
+        must_include:
+          regex: '/^(?!InSpark\.|Solution\.|BRC\.|DNA\.|DEV\.|SEC\.).*/'
           regex_flag: 'none'
   validate:
     - do: age
