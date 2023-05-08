@@ -1,9 +1,9 @@
 version: 2
 mergeable:
 
-##############
-### GLOBAL ###
-##############
+#########################
+### Naming convention ###
+#########################
 - when: pull_request.*, pull_request_review.*
   name: 'Naming convention'
   filter:
@@ -22,6 +22,37 @@ mergeable:
       payload:
         title: 'Naming convention'
         summary: 'The repo is not following the naming convention'
+
+##############
+### Global ###
+##############
+
+- when: pull_request.*, pull_request_review.*
+  name: 'Default rules'
+  validate:
+    - do: baseRef
+      must_exclude:
+        regex: 'master'
+        message: 'Merging into repo:master is forbidden'
+  pass:
+    - do: checks 
+      status: 'success' 
+      payload:
+        title: 'Mergeable Run have been Completed!'
+        summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
+
+- when: pull_request.*, pull_request_review.*
+  name: 'Default private rules'
+  filter:
+    - do: repository
+      visibility: 'private'
+  validate:
+    - do: age
+      created_at:
+        days: 0
+  pass:
+    - do: assign
+      assignees: ['@author']
 
 #################
 ### SOLUTIONS ###
@@ -47,28 +78,3 @@ mergeable:
       payload:
         title: 'Must have a version increment or no-release label'
         summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
-
-- when: schedule.repository
-  filter:
-    - do: repository
-      visibility: 'public' # Can be public or private
-      name:
-        must_include:
-          regex: 'Solution.*'
-  validate:
-    - do: stale
-      days: 30
-      type: pull_request
-      ignore_drafts: true
-      ignore_milestones: true
-      ignore_projects: true
-      time_constraint:
-        time_zone: 'Europe/Amsterdam'
-        hours_between: ['9', '17']
-        days_of_week: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
-  pass:
-    - do: comment
-      payload:
-        body: This PR is stale because it has been open 30 days with no activity. Remove stale label or comment or this will be closed in 10 days.
-    - do: labels
-      add: 'Stale'
