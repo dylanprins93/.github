@@ -14,7 +14,7 @@ mergeable:
           regex: '/^(InSpark|Solution|BRC|DNA|DEV|SEC)\..*'
           regex_flag: 'none'
   validate:
-    - do: age //1
+    - do: age
       created_at:
         days: 0
   fail:
