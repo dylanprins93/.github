@@ -84,14 +84,11 @@ mergeable:
     - do: approvals
       min:
         count: 2
-        message: 'Custom message...'
       required:
         owners: true
         assignees: false
         requested_reviewers: false
-        message: 'Custom message...'
       block:
         changes_requested: true
-        message: 'Custom message...'
       limit:
         owners: true
