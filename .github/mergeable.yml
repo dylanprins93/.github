@@ -6,19 +6,20 @@ mergeable:
 ##############
 - when: pull_request.*, pull_request_review.*
   name: 'Checking labels'
-  validate:
-    - do: age // validate based on the age of PR
-      created_at:
-        days: 0
   filter:
     - do: repository
       visibility: 'private'
       name:
         must_exclude:
           regex: '/^(InSpark|Solution|BRC|DNA|DEV|SEC)\..*'
+          regex_flag: 'none'
+  validate:
+    - do: age
+      created_at:
+        days: 0
   fail:
-    - do: checks # default pass case
-      status: 'failure' # Can be: success, failure, neutral, cancelled, timed_out, or action_required
+    - do: checks 
+      status: 'failure' 
       payload:
         title: 'Naming convention'
         summary: 'The repo is not following the naming convention'
@@ -39,11 +40,11 @@ mergeable:
     - do: label
       must_include:
         regex: 'patch|minor|major|no-release'
-        regex_flag: 'none' # Optional. Specify the flag for Regex. default is 'i', to disable default use 'none'
+        regex_flag: 'none'
         message: 'Must have a version increment label'
   fail:
-    - do: checks # default pass case
-      status: 'failure' # Can be: success, failure, neutral, cancelled, timed_out, or action_required
+    - do: checks 
+      status: 'failure' 
       payload:
         title: 'Must have a version increment or no-release label'
         summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
