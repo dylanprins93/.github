@@ -53,6 +53,18 @@ mergeable:
     - do: assign
       assignees: ['@author']
 
+- when: pull_request.*, pull_request_review.*
+  filter:
+    - do: repository
+      visibility: 'public'
+  validate:
+    - do: contents
+      files:
+        pr_diff: false
+        ignore: ['.github/mergeable.yml'] # Optional, default ['.github/mergeable.yml'], pattern of files to ignore
+      must_include:
+        regex: 'LICENSE'
+
 #################
 ### SOLUTIONS ###
 #################
