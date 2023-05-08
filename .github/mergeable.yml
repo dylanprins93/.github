@@ -11,8 +11,7 @@ mergeable:
       visibility: 'private'
       name:
         must_exclude:
-          regex: '/^(?!InSpark\.|Solution\.|BRC\.|DNA\.|DEV\.|SEC\.).*/'
-          regex_flag: 'none'
+          regex: '/^(InSpark\.|Solution\.|BRC\.|DNA\.|DEV\.|SEC\.)'
   validate:
     - do: age
       created_at:
