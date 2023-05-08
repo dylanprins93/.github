@@ -16,7 +16,7 @@ mergeable:
     - do: age
       created_at:
         days: 0
-  fail:
+  pass:
     - do: checks 
       status: 'failure' 
       payload:
