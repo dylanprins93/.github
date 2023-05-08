@@ -65,7 +65,7 @@ mergeable:
       visibility: 'private' # Can be public or private
       name:
         must_include:
-          regex: 'Solution.*'
+          regex: 'Solution.'
   validate:
     - do: label
       must_include:
