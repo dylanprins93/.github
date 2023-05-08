@@ -124,8 +124,19 @@ mergeable:
       status: 'failure' 
       payload:
         title: 'Must have a version increment or no-release label'
-        summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
-
+        summary: |
+            ### Status: {{toUpperCase validationStatus}}
+                  Here are some stats of the run:
+                  {{validationCount}} validations were ran.
+                  {{passCount}} PASSED
+                  {{failCount}} FAILED
+        text: "{{#each validationSuites}}\n
+              #### {{{statusIcon status}}} Validator: {{toUpperCase name}}\n
+              {{#each validations }} * {{{statusIcon status}}} ***{{{ description }}}***\n
+                    Input : {{{details.input}}}\n
+                    Settings : {{{displaySettings details.settings}}}\n
+                    {{/each}}\n
+              {{/each}}"
 - when: pull_request.*, pull_request_review.*
   name: 'Check approvals'
   filter:
