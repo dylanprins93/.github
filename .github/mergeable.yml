@@ -96,30 +96,44 @@ mergeable:
         must_include:
           regex: 'Solution.'
   validate:
-    - do: and
-      validate:
-        - do: label
-          must_include:
-            regex: 'patch|minor|major|no-release'
-            regex_flag: 'none'
-            message: 'Must have a version increment label'
-        - do: approvals
-          min:
-            count: 2
-            message: 'Custom message...'
-          required:
-            owners: true
-            assignees: false
-            requested_reviewers: false
-            message: 'Custom message...'
-          block:
-            changes_requested: true
-            message: 'Custom message...'
-          limit:
-            owners: true
+    - do: label
+      must_include:
+        regex: 'patch|minor|major|no-release'
+        regex_flag: 'none'
+        message: 'Must have a version increment label'
   fail:
     - do: checks 
       status: 'failure' 
       payload:
         title: 'Must have a version increment or no-release label'
+        summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
+
+- when: pull_request.*, pull_request_review.*
+  name: 'Default private rules'
+  filter:
+    - do: repository
+      visibility: 'private'
+      name:
+        must_include:
+          regex: 'Solution.'
+  validate:
+    - do: approvals
+      min:
+        count: 2
+        message: 'Custom message...'
+      required:
+        owners: true
+        assignees: false
+        requested_reviewers: false
+        message: 'Custom message...'
+      block:
+        changes_requested: true
+        message: 'Custom message...'
+      limit:
+        owners: true
+  pass:
+    - do: checks 
+      status: 'success' 
+      payload:
+        title: 'Mergeable Run have been Completed!'
         summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
