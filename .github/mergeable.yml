@@ -7,6 +7,9 @@ mergeable:
 - when: pull_request.*, pull_request_review.*
   name: 'Checking labels'
   validate:
+    - do: age // validate based on the age of PR
+      created_at:
+        days: 0
   filter:
     - do: repository
       visibility: 'private'
