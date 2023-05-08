@@ -11,7 +11,7 @@ mergeable:
       visibility: 'private'
       name:
         must_exclude:
-          regex: '^(InSpark\.|Solution\.|BRC\.|DNA\.|DEV\.|SEC\.)'
+          regex: '^(InSpark\.|Solution\.|BRC\.|DNA\.|DEV\.|SEC\.|.github$)'
   validate:
     - do: age
       created_at:
@@ -82,13 +82,31 @@ mergeable:
       payload:
         title: 'Mergeable Run have been Completed!'
         summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
+  fail:
+    - do: checks # default fail case
+      status: 'failure' # Can be: success, failure, neutral, cancelled, timed_out, or action_required
+      payload:
+        title: 'Mergeable Run have been Completed!'
+        summary: |
+            ### Status: {{toUpperCase validationStatus}}
+                  Here are some stats of the run:
+                  {{validationCount}} validations were ran.
+                  {{passCount}} PASSED
+                  {{failCount}} FAILED
+        text: "{{#each validationSuites}}\n
+              #### {{{statusIcon status}}} Validator: {{toUpperCase name}}\n
+              {{#each validations }} * {{{statusIcon status}}} ***{{{ description }}}***\n
+                    Input : {{{details.input}}}\n
+                    Settings : {{{displaySettings details.settings}}}\n
+                    {{/each}}\n
+              {{/each}}"
 
 #################
 ### SOLUTIONS ###
 #################
 
 - when: pull_request.*, pull_request_review.*
-  name: 'Solution rules'
+  name: 'Check labels'
   filter:
     - do: repository
       visibility: 'private' # Can be public or private
@@ -109,7 +127,7 @@ mergeable:
         summary: "All the validators have returned 'pass'! \n Here are some stats of the run: \n {{validationCount}} validations were ran"
 
 - when: pull_request.*, pull_request_review.*
-  name: 'Default private rules'
+  name: 'Check approvals'
   filter:
     - do: repository
       visibility: 'private'
