@@ -53,7 +53,7 @@ mergeable:
 - when: schedule.repository
   validate:
     - do: stale
-      days: 20
+      days: 30
       type: pull_request, issues
   pass:
     - do: comment
@@ -61,6 +61,14 @@ mergeable:
         body: This is old. Is it still relevant?
     - do: labels
       add: 'stale'
+
+- when: schedule.repository
+  validate:
+    - do: stale
+      days: 40
+      type: pull_request, issues
+  pass:
+    - do: close
 
 #################
 ### SOLUTIONS ###
