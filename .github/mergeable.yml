@@ -29,31 +29,14 @@ mergeable:
 
 - when: pull_request.*, pull_request_review.*
   name: 'Default rules'
-  filter:
-    - do: payload
-      pull_request:
-        body:
-          no_empty:
-            enabled: true
-  validate:
-    - do: description
-      no_empty:
-        enabled: true
-
-- when: pull_request.*, pull_request_review.*
-  name: 'Default rules'
-  filter:
-    - do: payload
-      pull_request:
-        base:
-          must_exclude:
-            regex: 'master'
-            key: 'ref'
   validate:
     - do: baseRef
       must_exclude:
         regex: 'master'
         message: 'Merging into repo:master is forbidden'
+    - do: description
+      no_empty:
+        enabled: true
 
 - when: pull_request.*, pull_request_review.*
   name: 'Check stale PR'
