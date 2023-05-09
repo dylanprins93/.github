@@ -29,17 +29,41 @@ mergeable:
 
 - when: pull_request.*, pull_request_review.*
   name: 'Default rules'
+  filter:
+    - do: payload
+      pull_request:
+        body:
+          no_empty:
+            enabled: true
   validate:
-    - do: baseRef
-      must_exclude:
-        regex: 'master'
-        message: 'Merging into repo:master is forbidden'
     - do: description
       no_empty:
         enabled: true
 
 - when: pull_request.*, pull_request_review.*
+  name: 'Default rules'
+  filter:
+    - do: payload
+      pull_request:
+        base:
+          must_exclude:
+            regex: 'master'
+            key: 'ref'
+  validate:
+    - do: baseRef
+      must_exclude:
+        regex: 'master'
+        message: 'Merging into repo:master is forbidden'
+
+- when: pull_request.*, pull_request_review.*
   name: 'Check stale PR'
+  filter:
+    - do: payload
+      pull_request:
+        labels:
+          must_exclude:
+            regex: 'stale'
+            key: 'name'
   validate:
     - when: schedule.repository
       validate:
@@ -50,6 +74,26 @@ mergeable:
         - do: comment
           payload:
             body: This is old. Is it still relevant?
+        - do: labels
+          add: 'stale'
+
+- when: pull_request.*, pull_request_review.*
+  name: 'Close stale PR'
+  filter:
+    - do: payload
+      pull_request:
+        labels:
+          must_include:
+            regex: 'stale'
+            key: 'name'
+  validate:
+    - when: schedule.repository
+      validate:
+        - do: stale
+          days: 40
+          type: pull_request
+      pass:
+        - do: close
 
 - when: pull_request.*, pull_request_review.*
   filter:
@@ -62,18 +106,6 @@ mergeable:
   pass:
     - do: assign
       assignees: ['@author']
-
-- when: pull_request.*, pull_request_review.*
-  filter:
-    - do: repository
-      visibility: 'public'
-  validate:
-    - do: contents
-      files:
-        pr_diff: false
-        ignore: ['.github/mergeable.yml'] # Optional, default ['.github/mergeable.yml'], pattern of files to ignore
-      must_include:
-        regex: 'LICENSE'
 
 #################
 ### SOLUTIONS ###
