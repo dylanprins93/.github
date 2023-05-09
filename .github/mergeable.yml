@@ -53,19 +53,19 @@ mergeable:
 - when: schedule.repository
   validate:
     - do: stale
-      days: 30
+      days: 1
       type: pull_request, issues
   pass:
     - do: comment
       payload:
-        body: This is old. Is it still relevant?
+        body: This is old. Is it still relevant? It will close in 10 days
     - do: labels
       add: 'stale'
 
 - when: schedule.repository
   validate:
     - do: stale
-      days: 40
+      days: 5
       type: pull_request, issues
   pass:
     - do: close
