@@ -40,13 +40,6 @@ mergeable:
 
 - when: pull_request.*, pull_request_review.*
   name: 'Check stale PR'
-  filter:
-    - do: payload
-      pull_request:
-        labels:
-          must_exclude:
-            regex: 'stale'
-            key: 'name'
   validate:
     - when: schedule.repository
       validate:
@@ -57,26 +50,6 @@ mergeable:
         - do: comment
           payload:
             body: This is old. Is it still relevant?
-        - do: labels
-          add: 'stale'
-
-- when: pull_request.*, pull_request_review.*
-  name: 'Close stale PR'
-  filter:
-    - do: payload
-      pull_request:
-        labels:
-          must_include:
-            regex: 'stale'
-            key: 'name'
-  validate:
-    - when: schedule.repository
-      validate:
-        - do: stale
-          days: 40
-          type: pull_request
-      pass:
-        - do: close
 
 - when: pull_request.*, pull_request_review.*
   filter:
