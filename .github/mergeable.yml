@@ -39,19 +39,6 @@ mergeable:
         enabled: true
 
 - when: pull_request.*, pull_request_review.*
-  name: 'Check stale PR'
-  validate:
-    - when: schedule.repository
-      validate:
-        - do: stale
-          days: 30
-          type: pull_request
-      pass:
-        - do: comment
-          payload:
-            body: This is old. Is it still relevant?
-
-- when: pull_request.*, pull_request_review.*
   filter:
     - do: repository
       visibility: 'private'
@@ -62,6 +49,7 @@ mergeable:
   pass:
     - do: assign
       assignees: ['@author']
+
 
 #################
 ### SOLUTIONS ###
