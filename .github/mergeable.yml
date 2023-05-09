@@ -59,7 +59,7 @@ mergeable:
     - do: comment
       payload:
         body: This is old. Is it still relevant?
-    - do: label
+    - do: labels
       add: 'stale'
 
 #################
